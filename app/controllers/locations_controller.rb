@@ -24,7 +24,10 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.json
   def create
+    
     @location = Location.new(location_params)
+    
+    @location.pop_weather(@location.zip) 
 
     respond_to do |format|
       if @location.save
@@ -69,6 +72,6 @@ class LocationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_params
-      params.require(:location).permit(:city, :state, :zip)
+      params.require(:location).permit(:city, :state, :zip, :lat, :lon)
     end
 end

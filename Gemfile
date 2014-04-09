@@ -47,3 +47,6 @@ end
 
 # Use Postgresql database
 gem 'rails_12factor', group: :production
+
+# HTTParty
+gem 'httparty'
