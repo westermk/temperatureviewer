@@ -11,3 +11,6 @@
  *= require_self
  *= require_tree .
  */
+
+require_main.css
+require_tables.css

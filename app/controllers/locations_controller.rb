@@ -1,10 +1,28 @@
 class LocationsController < ApplicationController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
+  def temp_for(zip) 
+    
+    response = HTTParty.get('http://api.wunderground.com/api/735c849d33f507e5/weather/conditions/q/' + zip + '.json')
+    
+    temp = response['current_observation']['temp_f']
+    
+  end
+
   # GET /locations
   # GET /locations.json
   def index
-    @locations = Location.all
+    #@locations = Location.all
+    
+    @locations = Location.all.each do |loc|
+      loc.temp = temp_for(loc.zip) 
+    end
+    #@location.each do |loc|
+     # loc.temp = temp_for(loc.zip)
+    #end    
+    
+    # Ensure that you update temp attribute of the Location model.
+    
   end
 
   # GET /locations/1
@@ -43,7 +61,11 @@ class LocationsController < ApplicationController
   # PATCH/PUT /locations/1
   # PATCH/PUT /locations/1.json
   def update
+        
     respond_to do |format|
+    
+      @location.pop_weather(@location.zip) 
+    
       if @location.update(location_params)
         format.html { redirect_to @location, notice: 'Location was successfully updated.' }
         format.json { head :no_content }
@@ -72,6 +94,6 @@ class LocationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_params
-      params.require(:location).permit(:city, :state, :zip, :lat, :lon)
+      params.require(:location).permit(:temp, :city, :state, :zip, :lat, :lon)
     end
 end
